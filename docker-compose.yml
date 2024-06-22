@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  data-base:
+    container_name: effictive-mobile-db
+    image: postgres:latest
+    build: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - PGDATA=${PGDIR:-/data/postgres}
+    volumes:
+      - data-volume:${PGDIR:-/data/postgres}
+    ports:
+      - ${PG_PORT}:${PG_PORT}
+    networks:
+      - data-network
+    restart: unless-stopped
+    
+  
+  pg-admin:
+    container_name: effictive-mobile-pg-admin
+    image: dpage/pgadmin4
+    build: ./pgadmin
+    depends_on:
+      - data-base
+    environment:
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_USER=${POSTGRES_USERNAME}
+      - PGADMIN_DEFAULT_EMAIL=${PG_ADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PG_ADMIN_PASSWORD}
+
+    ports:
+      - ${PG_ADMIN_PORT_ONE}:${PG_ADMIN_PORT_TWO}
+    networks:
+      - data-network
+
+networks:
+  data-network:
+    driver: bridge
+
+volumes:
+  data-volume:
