@@ -156,15 +156,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrmModule = void 0;
 const common_1 = __webpack_require__(3);
+const typeorm_1 = __webpack_require__(9);
 let OrmModule = class OrmModule {
 };
 exports.OrmModule = OrmModule;
 exports.OrmModule = OrmModule = __decorate([
     (0, common_1.Module)({
-        imports: [],
+        imports: [typeorm_1.TypeOrmModule],
     })
 ], OrmModule);
 
+
+/***/ }),
+/* 9 */
+/***/ ((module) => {
+
+module.exports = require("@nestjs/typeorm");
 
 /***/ })
 /******/ 	]);

@@ -1,7 +1,8 @@
 import { config } from 'dotenv';
 import { ConfigService } from '@nestjs/config';
-import { join } from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
+import { join } from 'path';
+import { Logger } from '@nestjs/common';
 
 config({ path: join(process.cwd(), '..', '.env') });
 const configService = new ConfigService();
@@ -23,6 +24,9 @@ const options = (): DataSourceOptions => {
   const username = configService.get<string>('POSTGRES_USERNAME');
   const db = configService.get<string>('DB_NAME');
   const password = getPassword;
+  Logger.log(host);
+  Logger.log(username);
+  Logger.log(db);
   // const password = configService.get<string>('POSTGRES_PASSWORD');
   return {
     type: 'postgres',
@@ -31,14 +35,14 @@ const options = (): DataSourceOptions => {
     username: username,
     password: password,
     database: db,
-    schema: 'people',
+    schema: 'history',
     synchronize: false,
     dropSchema: false,
     logging: true,
     entities: [],
     migrations: [join(process.cwd(), 'migrations', '**', '*migration.ts')],
     migrationsRun: true,
-    migrationsTableName: 'people_migrations',
+    migrationsTableName: 'history_migrations',
   };
 };
 export const dataSource = new DataSource(options());
