@@ -11,15 +11,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Event = void 0;
 const typeorm_1 = require("typeorm");
+var Method;
+(function (Method) {
+    Method["POST"] = "POST";
+    Method["PUT"] = "PUT";
+})(Method || (Method = {}));
 let Event = class Event {
 };
 exports.Event = Event;
 __decorate([
-    (0, typeorm_1.PrimaryColumn)(),
+    (0, typeorm_1.PrimaryGeneratedColumn)('increment'),
     __metadata("design:type", Number)
 ], Event.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({
+        type: 'enum',
+        enum: Method,
+        default: Method.POST,
+    }),
     __metadata("design:type", String)
 ], Event.prototype, "restMethod", void 0);
 __decorate([

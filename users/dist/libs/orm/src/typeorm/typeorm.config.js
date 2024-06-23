@@ -33,7 +33,7 @@ const options = () => {
         dropSchema: false,
         logging: true,
         entities: index_1.USER,
-        migrations: [(0, path_1.join)(process.cwd(), 'migrations', '**', '*migration.ts')],
+        migrations: [(0, path_1.join)(process.cwd(), 'migrations', '*.js')],
         migrationsRun: true,
         migrationsTableName: 'people_migrations',
     };

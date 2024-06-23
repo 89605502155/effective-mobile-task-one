@@ -1,11 +1,19 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+enum Method {
+  POST = 'POST',
+  PUT = 'PUT',
+}
 @Entity('events')
 export class Event {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
-  @Column()
-  restMethod: string;
+  @Column({
+    type: 'enum',
+    enum: Method,
+    default: Method.POST,
+  })
+  restMethod: Method;
   @Column()
   userId: number;
   @Column({ type: 'date' })

@@ -11,5 +11,10 @@ CREATE SCHEMA people;
 
 
 для создания и накатывания миграций нужны 2 команды, которые нужно запускать в дирректории конкретного сервиса.
+для сервиса пользователей так:
 npm run migration:generate --name=user_create
 npm run typeorm migration:run -- -d ./libs/orm/src/typeorm/typeorm.config.ts
+
+для сервиса обработки событий:
+npm run migration:generate --name=user_create
+npm run migration:run

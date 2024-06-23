@@ -1,6 +1,11 @@
+declare enum Method {
+    POST = "POST",
+    PUT = "PUT"
+}
 export declare class Event {
     id: number;
-    restMethod: string;
+    restMethod: Method;
     userId: number;
     time: Date;
 }
+export {};
