@@ -210,7 +210,6 @@ const dotenv_1 = __webpack_require__(12);
 const config_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(13);
 const path_1 = __webpack_require__(14);
-const common_1 = __webpack_require__(3);
 (0, dotenv_1.config)({ path: (0, path_1.join)(process.cwd(), '..', '.env') });
 const configService = new config_1.ConfigService();
 const getPassword = () => {
@@ -226,9 +225,6 @@ const options = () => {
     const username = configService.get('POSTGRES_USERNAME');
     const db = configService.get('DB_NAME');
     const password = getPassword;
-    common_1.Logger.log(host);
-    common_1.Logger.log(username);
-    common_1.Logger.log(db);
     return {
         type: 'postgres',
         host: host,

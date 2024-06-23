@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { OrmModule } from '@lib/orm';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { OrmModule } from '@lib/orm';
       envFilePath: './../.env',
     }),
     OrmModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

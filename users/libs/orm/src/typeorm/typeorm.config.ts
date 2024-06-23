@@ -2,6 +2,7 @@ import { config } from 'dotenv';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
+import { USER } from '/home/ferubkomsu/Рабочий стол/Создать папку 1/effectiveMobile/task1/users/libs/entities/index';
 
 config({ path: join(process.cwd(), '..', '.env') });
 const configService = new ConfigService();
@@ -19,11 +20,9 @@ const getPassword = (): string => {
 const options = (): DataSourceOptions => {
   const host = configService.get<string>('DATABASE_HOST');
   const port = parseInt(configService.get<string>('PG_PORT'));
-  //   const username = configService.get<string>('POSTGRES_USERNAME');
   const username = configService.get<string>('POSTGRES_USERNAME');
   const db = configService.get<string>('DB_NAME');
   const password = getPassword;
-  // const password = configService.get<string>('POSTGRES_PASSWORD');
   return {
     type: 'postgres',
     host: host,
@@ -35,8 +34,8 @@ const options = (): DataSourceOptions => {
     synchronize: false,
     dropSchema: false,
     logging: true,
-    entities: [],
-    migrations: [join(process.cwd(), 'migrations', '**', '*migration.ts')],
+    entities: USER,
+    migrations: [join(process.cwd(), 'migrations', '*.js')],
     migrationsRun: true,
     migrationsTableName: 'people_migrations',
   };
