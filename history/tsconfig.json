@@ -23,6 +23,12 @@
       ],
       "@lib/orm/*": [
         "libs/orm/src/*"
+      ],
+      "@lib/entity": [
+        "libs/entity/src"
+      ],
+      "@lib/entity/*": [
+        "libs/entity/src/*"
       ]
     }
   }
