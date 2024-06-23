@@ -2,6 +2,7 @@ import { config } from 'dotenv';
 import { ConfigService } from '@nestjs/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { join } from 'path';
+import { Event } from '/home/ferubkomsu/Рабочий стол/Создать папку 1/effectiveMobile/task1/history/libs/entity/src/index';
 
 config({ path: join(process.cwd(), '..', '.env') });
 const configService = new ConfigService();
@@ -33,8 +34,8 @@ const options = (): DataSourceOptions => {
     synchronize: false,
     dropSchema: false,
     logging: true,
-    entities: [],
-    migrations: [join(process.cwd(), 'migrations', '**', '*migration.ts')],
+    entities: [Event],
+    migrations: [join(process.cwd(), 'migrations', '*.js')],
     migrationsRun: true,
     migrationsTableName: 'history_migrations',
   };
