@@ -405,31 +405,34 @@ let UserService = class UserService {
     constructor(usersRepository, httpClient) {
         this.usersRepository = usersRepository;
         this.httpClient = httpClient;
+        this.addres = 'http://' +
+            process.env.DATABASE_HOST +
+            ':' +
+            process.env.HISTORY_PORT +
+            '/events/add';
+    }
+    onHistory(addres, method, usId, status) {
+        this.httpClient.axiosRef.post(addres, {
+            restMethod: method,
+            userId: usId,
+            status: status,
+        });
     }
     async create(createUserDto) {
         let success = false;
         let res;
-        const addres = 'http://localhost:3001/events/add';
         try {
             const user = this.usersRepository.create(createUserDto);
             res = await this.usersRepository.save(user);
         }
         catch (e) {
-            this.httpClient.axiosRef.post(addres, {
-                restMethod: 'POST',
-                userId: -1,
-                status: false,
-            });
+            this.onHistory(this.addres, 'POST', -1, false);
             success = true;
             return e;
         }
         finally {
             if (success === false) {
-                console.log(res);
-                this.httpClient.axiosRef.post(addres, {
-                    restMethod: 'POST',
-                    userId: res.id,
-                });
+                this.onHistory(this.addres, 'POST', res.id, true);
                 return res;
             }
         }
@@ -442,11 +445,27 @@ let UserService = class UserService {
         return val.id;
     }
     async update(id, updateUserDto) {
+        let success = false;
+        let res;
         const user = await this.usersRepository.findOneBy({ id: id });
         for (const [key, value] of Object.entries(updateUserDto)) {
             user[key] = value;
         }
-        return await this.usersRepository.update(id, user);
+        try {
+            res = await this.usersRepository.update(id, user);
+        }
+        catch (e) {
+            success = true;
+            this.onHistory(this.addres, 'PUT', id, false);
+            return e;
+        }
+        finally {
+            if (success === false) {
+                this.onHistory(this.addres, 'PUT', id, true);
+                return res;
+            }
+        }
+        return res;
     }
 };
 exports.UserService = UserService;
@@ -526,7 +545,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "findId", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
+    (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
