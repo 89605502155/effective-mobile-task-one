@@ -23,4 +23,6 @@ export class Event {
   userId: number;
   @CreateDateColumn({ type: 'timestamp' })
   time: Date;
+  @Column({ type: 'bool', default: true })
+  status: boolean;
 }

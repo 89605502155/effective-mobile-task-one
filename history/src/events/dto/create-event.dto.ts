@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, IsNotEmpty } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsNotEmpty } from 'class-validator';
 import { Method } from '@lib/entity/event';
 
 export class CreateEventDto {
@@ -9,4 +9,7 @@ export class CreateEventDto {
   @IsNotEmpty()
   userId: number;
   time?: Date;
+  @IsBoolean()
+  @IsNotEmpty()
+  status: boolean;
 }

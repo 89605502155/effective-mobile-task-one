@@ -348,15 +348,28 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserModule = void 0;
 const common_1 = __webpack_require__(3);
 const user_service_1 = __webpack_require__(18);
-const user_controller_1 = __webpack_require__(19);
+const user_controller_1 = __webpack_require__(20);
 const typeorm_1 = __webpack_require__(10);
 const entities_1 = __webpack_require__(15);
+const axios_1 = __webpack_require__(19);
+const config_1 = __webpack_require__(6);
+const path_1 = __webpack_require__(13);
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
 exports.UserModule = UserModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([entities_1.User])],
+        imports: [
+            config_1.ConfigModule.forRoot({
+                envFilePath: './../../.env',
+            }),
+            typeorm_1.TypeOrmModule.forFeature([entities_1.User]),
+            axios_1.HttpModule.register({
+                baseURL: (0, path_1.join)('http://', process.env.DATABASE_HOST, ':', process.env.HISTORY_PORT),
+                maxRedirects: 5,
+                timeout: 5000,
+            }),
+        ],
         controllers: [user_controller_1.UserController],
         providers: [user_service_1.UserService],
     })
@@ -380,19 +393,46 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
+var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserService = void 0;
 const user_entity_1 = __webpack_require__(16);
 const common_1 = __webpack_require__(3);
 const typeorm_1 = __webpack_require__(10);
 const typeorm_2 = __webpack_require__(14);
+const axios_1 = __webpack_require__(19);
 let UserService = class UserService {
-    constructor(usersRepository) {
+    constructor(usersRepository, httpClient) {
         this.usersRepository = usersRepository;
+        this.httpClient = httpClient;
     }
-    create(createUserDto) {
-        return this.usersRepository.insert(createUserDto);
+    async create(createUserDto) {
+        let success = false;
+        let res;
+        const addres = 'http://localhost:3001/events/add';
+        try {
+            const user = this.usersRepository.create(createUserDto);
+            res = await this.usersRepository.save(user);
+        }
+        catch (e) {
+            this.httpClient.axiosRef.post(addres, {
+                restMethod: 'POST',
+                userId: -1,
+                status: false,
+            });
+            success = true;
+            return e;
+        }
+        finally {
+            if (success === false) {
+                console.log(res);
+                this.httpClient.axiosRef.post(addres, {
+                    restMethod: 'POST',
+                    userId: res.id,
+                });
+                return res;
+            }
+        }
     }
     findAll() {
         return this.usersRepository.find();
@@ -413,12 +453,18 @@ exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
-    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object, typeof (_b = typeof axios_1.HttpService !== "undefined" && axios_1.HttpService) === "function" ? _b : Object])
 ], UserService);
 
 
 /***/ }),
 /* 19 */
+/***/ ((module) => {
+
+module.exports = require("@nestjs/axios");
+
+/***/ }),
+/* 20 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -439,8 +485,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserController = void 0;
 const common_1 = __webpack_require__(3);
 const user_service_1 = __webpack_require__(18);
-const create_user_dto_1 = __webpack_require__(20);
-const update_user_dto_1 = __webpack_require__(22);
+const create_user_dto_1 = __webpack_require__(21);
+const update_user_dto_1 = __webpack_require__(23);
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -494,7 +540,7 @@ exports.UserController = UserController = __decorate([
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -509,7 +555,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateUserDto = void 0;
-const class_validator_1 = __webpack_require__(21);
+const class_validator_1 = __webpack_require__(22);
 class CreateUserDto {
 }
 exports.CreateUserDto = CreateUserDto;
@@ -534,13 +580,13 @@ __decorate([
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ ((module) => {
 
 module.exports = require("class-validator");
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -555,7 +601,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateUserDto = void 0;
-const class_validator_1 = __webpack_require__(21);
+const class_validator_1 = __webpack_require__(22);
 class UpdateUserDto {
 }
 exports.UpdateUserDto = UpdateUserDto;

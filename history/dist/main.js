@@ -335,6 +335,10 @@ __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: 'timestamp' }),
     __metadata("design:type", typeof (_a = typeof Date !== "undefined" && Date) === "function" ? _a : Object)
 ], Event.prototype, "time", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'bool', default: true }),
+    __metadata("design:type", Boolean)
+], Event.prototype, "status", void 0);
 exports.Event = Event = __decorate([
     (0, typeorm_1.Entity)('events')
 ], Event);
@@ -499,6 +503,11 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
 ], CreateEventDto.prototype, "userId", void 0);
+__decorate([
+    (0, class_validator_1.IsBoolean)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", Boolean)
+], CreateEventDto.prototype, "status", void 0);
 
 
 /***/ }),
