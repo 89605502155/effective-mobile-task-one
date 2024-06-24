@@ -1,6 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-enum Method {
+export enum Method {
   POST = 'POST',
   PUT = 'PUT',
 }
@@ -16,6 +21,6 @@ export class Event {
   restMethod: Method;
   @Column()
   userId: number;
-  @Column({ type: 'date' })
+  @CreateDateColumn({ type: 'timestamp' })
   time: Date;
 }
